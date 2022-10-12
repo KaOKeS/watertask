@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+</head>
+<body>
+<div class="container">
+    <h1>Hello, lets force living beeing to drink some water!</h1><br>
+    <h2>What living beeing will be drinking water?</h2><br>
+    <p th:if="${error!=null}" class="error alert alert-danger" th:text="${'Last living beeing was full. Try with new one.'}">Error diplayer</p>
+    <div class="justify-content-center">
+        <form method="post" th:action="@{/create}" th:object="${createLivingBeeingFormDTO}">
+            <div class="col-2">
+            <select class="form-select" th:field="*{livingBeeing}">
+                <option value="human">Human</option>
+                <option value="cat">Cat</option>
+            </select>
+            </div>
+            <div class="col-2">
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Stomach capacity</span>
+                    <input type="text" required="required" class="form-control" th:field="*{stomachCapacity}" pattern="^\d+\.\d+$|^\d+$" placeholder="exp: 2.5">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">OK</button>
+        </form>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</body>
+</html>
