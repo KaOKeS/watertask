@@ -4,7 +4,7 @@ import com.akvelon.watertask.dto.CreateContainerFormDTO;
 import com.akvelon.watertask.dto.CreateLivingBeeingFormDTO;
 import com.akvelon.watertask.dto.LivingBeeingDTO;
 import com.akvelon.watertask.entity.*;
-import com.akvelon.watertask.entity.Converter.LivingBeeingConverter;
+import com.akvelon.watertask.entity.converter.LivingBeeingConverter;
 import com.akvelon.watertask.entity.contract.ContainerFactory;
 import com.akvelon.watertask.entity.contract.LivingBeeingFactory;
 import com.akvelon.watertask.service.DrinkService;
@@ -12,12 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-
-import java.util.Locale;
 
 @Controller
 public class MainController {

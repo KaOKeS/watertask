@@ -43,11 +43,11 @@ public class DrinkService implements Drink{
     }
 
     private boolean isLivingBeeingAbletoDrink(LivingBeeing livingBeeing, Container container){
-        String livingBeeingString = livingBeeing.getClass().getSimpleName().toLowerCase();
-        String containerString = container.getClass().getSimpleName().toLowerCase();
         if(livingBeeing == null || container==null)
             throw new NullPointerException("Objects passed to drink() were null");
-        else if(livingBeeing.isStomachFull())
+        String livingBeeingString = livingBeeing.getClass().getSimpleName().toLowerCase();
+        String containerString = container.getClass().getSimpleName().toLowerCase();
+        if(livingBeeing.isStomachFull())
             throw new IllegalArgumentException("Stomach is already full.");
         else if(container.isContainerEmpty())
             throw new IllegalArgumentException("Container is already empty.");

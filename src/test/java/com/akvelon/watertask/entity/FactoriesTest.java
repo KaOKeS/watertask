@@ -22,10 +22,12 @@ public class FactoriesTest {
     @Test
     void checkIfLivingBeeingFactoryReturnsHumanWhenCalledWithHumanString(){
         Assertions.assertTrue(livingBeeingFactory.createLivingBeeing("HumAn",5) instanceof Human);
+        Assertions.assertTrue(livingBeeingFactory.createLivingBeeing("HumAn",5,0) instanceof Human);
     }
 
     @Test
     void checkIfLivingBeeingFactoryReturnsCatWhenCalledWithCatString(){
         Assertions.assertTrue(livingBeeingFactory.createLivingBeeing("CaT",5) instanceof Cat);
+        Assertions.assertTrue(livingBeeingFactory.createLivingBeeing("CaT",5,0) instanceof Cat);
     }
 }

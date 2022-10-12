@@ -1,7 +1,6 @@
-package com.akvelon.watertask.entity.Converter;
+package com.akvelon.watertask.entity.converter;
 
 import com.akvelon.watertask.dto.LivingBeeingDTO;
-import com.akvelon.watertask.entity.Human;
 import com.akvelon.watertask.entity.LivingBeeing;
 import com.akvelon.watertask.entity.LivingBeeingFactoryImpl;
 import com.akvelon.watertask.entity.contract.LivingBeeingFactory;

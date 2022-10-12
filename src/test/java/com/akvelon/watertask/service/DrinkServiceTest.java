@@ -1,9 +1,6 @@
 package com.akvelon.watertask.service;
 
-import com.akvelon.watertask.entity.Bottle;
-import com.akvelon.watertask.entity.Container;
-import com.akvelon.watertask.entity.Human;
-import com.akvelon.watertask.entity.LivingBeeing;
+import com.akvelon.watertask.entity.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -50,5 +47,17 @@ public class DrinkServiceTest {
         drinkService.drink(livingBeeing,container);
         Assertions.assertTrue(livingBeeing.isStomachFull());
         Assertions.assertEquals(container.getCurrentVolume(),2.0);
+    }
+
+    @Test
+    void livingBeeingIsNotAbleToDrinkFromSpecyficContainerTest(){
+        LivingBeeing livingBeeing = new Cat(3.0);
+        Container container = new Bottle(1.0);
+        Assertions.assertThrows(IllegalArgumentException.class,()->drinkService.drink(livingBeeing,container));
+    }
+
+    @Test
+    void passingNullParametersToDrinkMethodCousesNullPointerExceptionTest(){
+        Assertions.assertThrows(NullPointerException.class,()-> drinkService.drink(null,null));
     }
 }
