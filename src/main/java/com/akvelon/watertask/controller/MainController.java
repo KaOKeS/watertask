@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Locale;
 
@@ -72,20 +73,21 @@ public class MainController {
             }
             catch (IllegalArgumentException e){
                 redirectAttributes.addFlashAttribute("livingBeeing",livingBeeing);
-                return "redirect:/error/full";
+                redirectAttributes.addFlashAttribute("error",e.getMessage());
+                return "redirect:/errorDrinking";
             }
             redirectAttributes.addFlashAttribute("lastContainer",container);
         }
         catch (IllegalArgumentException e){
             redirectAttributes.addFlashAttribute("livingBeeing",livingBeeing);
-            return "redirect:/error/containerProblem";
+            return "redirect:/errorDrinking";
         }
         return "redirect:/"+livingBeeingDTO.getLivingBeeingType().toLowerCase();
     }
 
-    @GetMapping(value = "/error/{error}")
+    @GetMapping(value = "/errorDrinking")
     public String displayMainPageWithError(Model model,
-                                           @PathVariable String error,
+                                           @ModelAttribute("error") String error,
                                            @ModelAttribute("livingBeeing") LivingBeeing livingBeeing,
                                            RedirectAttributes redirectAttributes){
         if(livingBeeing.isStomachFull()){
@@ -95,5 +97,13 @@ public class MainController {
         redirectAttributes.addFlashAttribute("error",error);
         redirectAttributes.addFlashAttribute("livingBeeingDTO",livingBeeingConverter.entityToDto(livingBeeing));
         return (livingBeeing instanceof Human) ? "redirect:/human" : "redirect:/cat";
+    }
+
+    @GetMapping("/redirectWithRedirectView")
+    public RedirectView redirectWithUsingRedirectView(
+            RedirectAttributes attributes) {
+        attributes.addFlashAttribute("flashAttribute", "redirectWithRedirectView");
+        attributes.addAttribute("attribute", "redirectWithRedirectView");
+        return new RedirectView("redirectedUrl");
     }
 }

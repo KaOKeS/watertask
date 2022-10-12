@@ -16,10 +16,7 @@
     <div th:text="${'Cat is filled with: ' + livingBeeingDTO.getStomachCurrentVolume() + ' amount of water'}"></div>
     <div th:text="${'Cat stomach capacity is: ' + livingBeeingDTO.getStomachMaximumVolume()}"></div>
     <div th:if="${lastContainer==null && error==null}" th:text="${'Cat will drink for the first time'}"></div>
-    <div th:if="error!=null">
-        <p th:if="${error?.equals('containerProblem')}" class="error alert alert-danger" th:text="${'Water container cannot be empty.'}">Error diplayer</p>
-        <p th:if="${error?.equals('wrongContainer')}" class="error alert alert-danger" th:text="${'Cat cannot drink from bottle.'}">Error diplayer</p>
-    </div>
+    <p th:if="${error!=null}" class="error alert alert-danger" th:text="${error}">Error diplayer</p>
     <div th:if="${lastContainer!=null}" th:text="${'In last container '+ lastContainer.getCurrentVolume() +' water left.'}"></div>
     <br>
     <form method="post" th:action="@{/drink}" th:object="${container}">
