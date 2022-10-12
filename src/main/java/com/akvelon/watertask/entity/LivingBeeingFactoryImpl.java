@@ -1,6 +1,5 @@
 package com.akvelon.watertask.entity;
 
-import com.akvelon.watertask.dto.LivingBeeingDTO;
 import com.akvelon.watertask.entity.contract.LivingBeeingFactory;
 import org.springframework.stereotype.Component;
 
