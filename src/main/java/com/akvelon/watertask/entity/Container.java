@@ -1,13 +1,13 @@
 package com.akvelon.watertask.entity;
 
 public abstract class Container {
-    private final double MAX_VOLUME;
+    private final double maxVolume;
     private double currentVolume;
 
-    public Container(double maxVolume) {
+    protected Container(double maxVolume) {
         if(maxVolume<=0)
             throw new IllegalArgumentException("Maximum volume should be bigger than 0");
-        this.MAX_VOLUME = maxVolume;
+        this.maxVolume = maxVolume;
         this.currentVolume = maxVolume;
     }
 
@@ -22,7 +22,7 @@ public abstract class Container {
     }
 
     public double getMaxVolume() {
-        return MAX_VOLUME;
+        return maxVolume;
     }
 
     public boolean isContainerEmpty(){

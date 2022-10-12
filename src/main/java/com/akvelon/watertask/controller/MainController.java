@@ -20,6 +20,9 @@ import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 public class MainController {
+    public static final String LIVING_BEEING_DTO = "livingBeeingDTO";
+    public static final String REDIRECT = "redirect:/";
+    public static final String ERROR = "error";
     private final DrinkService drinkService;
     private final LivingBeeingFactory livingBeeingFactory;
     private final ContainerFactory containerFactory;
@@ -35,16 +38,15 @@ public class MainController {
     @GetMapping("")
     public String displayMainPage(Model model){
         model.addAttribute("createLivingBeeingFormDTO",new CreateLivingBeeingFormDTO());
-        LivingBeeing human = livingBeeingFactory.createLivingBeeing("human", 2.0);
         return "index";
     }
 
     @PostMapping("/create")
     public String submitForm(@ModelAttribute("createLivingBeeingFormDTO") CreateLivingBeeingFormDTO createLivingBeeingFormDTO,
                              RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("livingBeeingDTO",
+        redirectAttributes.addFlashAttribute(LIVING_BEEING_DTO,
                 new LivingBeeingDTO(createLivingBeeingFormDTO.getStomachCapacity(),createLivingBeeingFormDTO.getLivingBeeing()));
-        return "redirect:/" + createLivingBeeingFormDTO.getLivingBeeing();
+        return REDIRECT + createLivingBeeingFormDTO.getLivingBeeing();
     }
 
     @GetMapping("/human")
@@ -66,35 +68,29 @@ public class MainController {
         LivingBeeing livingBeeing = livingBeeingFactory.createLivingBeeing(livingBeeingDTO.getLivingBeeingType(),livingBeeingDTO.getStomachMaximumVolume(),livingBeeingDTO.getStomachCurrentVolume());
         try{
             Container container = containerFactory.createContainer(createContainerFormDTO.getContainerType(),createContainerFormDTO.getCapacity());
-            try{
-                drinkService.drink(livingBeeing,container);
-                redirectAttributes.addFlashAttribute("livingBeeingDTO",livingBeeingConverter.entityToDto(livingBeeing));
-            }
-            catch (IllegalArgumentException e){
-                redirectAttributes.addFlashAttribute("livingBeeing",livingBeeing);
-                redirectAttributes.addFlashAttribute("error",e.getMessage());
-                return "redirect:/errorDrinking";
-            }
+            drinkService.drink(livingBeeing,container);
+            redirectAttributes.addFlashAttribute(LIVING_BEEING_DTO,livingBeeingConverter.entityToDto(livingBeeing));
             redirectAttributes.addFlashAttribute("lastContainer",container);
         }
         catch (IllegalArgumentException e){
             redirectAttributes.addFlashAttribute("livingBeeing",livingBeeing);
+            redirectAttributes.addFlashAttribute(ERROR,e.getMessage());
             return "redirect:/errorDrinking";
         }
-        return "redirect:/"+livingBeeingDTO.getLivingBeeingType().toLowerCase();
+        return REDIRECT+livingBeeingDTO.getLivingBeeingType().toLowerCase();
     }
 
     @GetMapping(value = "/errorDrinking")
     public String displayMainPageWithError(Model model,
-                                           @ModelAttribute("error") String error,
+                                           @ModelAttribute(ERROR) String error,
                                            @ModelAttribute("livingBeeing") LivingBeeing livingBeeing,
                                            RedirectAttributes redirectAttributes){
         if(livingBeeing.isStomachFull()){
-            redirectAttributes.addFlashAttribute("error",error);
-            return "redirect:/";
+            redirectAttributes.addFlashAttribute(ERROR,error);
+            return REDIRECT;
         }
-        redirectAttributes.addFlashAttribute("error",error);
-        redirectAttributes.addFlashAttribute("livingBeeingDTO",livingBeeingConverter.entityToDto(livingBeeing));
+        redirectAttributes.addFlashAttribute(ERROR,error);
+        redirectAttributes.addFlashAttribute(LIVING_BEEING_DTO,livingBeeingConverter.entityToDto(livingBeeing));
         return (livingBeeing instanceof Human) ? "redirect:/human" : "redirect:/cat";
     }
 

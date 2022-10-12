@@ -10,7 +10,7 @@ import java.util.*;
 public class DrinkService implements Drink{
     private Map<String, Set<String>> drinkingPossibilities = new HashMap<>();
 
-    {
+    public DrinkService() {
         drinkingPossibilities.put("human",new HashSet<>(Arrays.asList("bottle","bowl")));
         drinkingPossibilities.put("cat",new HashSet<>(Arrays.asList("bowl")));
     }
@@ -39,7 +39,7 @@ public class DrinkService implements Drink{
         if(drinkingPossibilities.containsKey(livingBeeingString))
             drinkingPossibilities.get(livingBeeingString).add(containerString);
         else
-            drinkingPossibilities.put(livingBeeingString,new HashSet(Arrays.asList(containerString)));
+            drinkingPossibilities.put(livingBeeingString,new HashSet<>(Arrays.asList(containerString)));
     }
 
     private boolean isLivingBeeingAbletoDrink(LivingBeeing livingBeeing, Container container){

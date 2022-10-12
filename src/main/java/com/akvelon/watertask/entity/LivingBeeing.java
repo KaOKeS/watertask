@@ -1,17 +1,17 @@
 package com.akvelon.watertask.entity;
 
 public abstract class LivingBeeing {
-    private final double STOMACH_MAX_VOLUME;
+    private final double stomachMaxVolume;
     private double stomachCurrentVolume;
 
-    public LivingBeeing(double stomachMaximumVolume) {
+    protected LivingBeeing(double stomachMaximumVolume) {
         if(stomachMaximumVolume<=0)
             throw new IllegalArgumentException("Stomach maximum volume should be bigger than 0");
-        this.STOMACH_MAX_VOLUME = stomachMaximumVolume;
+        this.stomachMaxVolume = stomachMaximumVolume;
     }
 
-    public LivingBeeing(double STOMACH_MAX_VOLUME, double stomachCurrentVolume) {
-        this.STOMACH_MAX_VOLUME = STOMACH_MAX_VOLUME;
+    protected LivingBeeing(double stomachMaxVolume, double stomachCurrentVolume) {
+        this.stomachMaxVolume = stomachMaxVolume;
         this.stomachCurrentVolume = stomachCurrentVolume;
     }
 
@@ -22,16 +22,16 @@ public abstract class LivingBeeing {
     public void setStomachCurrentVolume(double stomachCurrentVolume) {
         if(stomachCurrentVolume<0)
             throw new IllegalArgumentException("Stomach current volume can not be less than 0");
-        else if(stomachCurrentVolume>STOMACH_MAX_VOLUME)
+        else if(stomachCurrentVolume> stomachMaxVolume)
             throw new IllegalArgumentException("Stomach current capacity can not exeed its maximum capacity");
         this.stomachCurrentVolume = stomachCurrentVolume;
     }
 
     public double getStomachMaximumVolume() {
-        return STOMACH_MAX_VOLUME;
+        return stomachMaxVolume;
     }
 
     public boolean isStomachFull(){
-        return (Math.abs(stomachCurrentVolume-STOMACH_MAX_VOLUME)<0.0001);
+        return (Math.abs(stomachCurrentVolume- stomachMaxVolume)<0.0001);
     }
 }
