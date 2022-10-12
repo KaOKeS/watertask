@@ -13,8 +13,8 @@
 </head>
 <body>
 <div class="container">
-    <div th:text="${'Cat is filled with: ' + livingBeeing.getStomachCurrentVolume() + ' amount of water'}"></div>
-    <div th:text="${'Cat stomach capacity is: ' + livingBeeing.getStomachMaximumVolume()}"></div>
+    <div th:text="${'Cat is filled with: ' + livingBeeingDTO.getStomachCurrentVolume() + ' amount of water'}"></div>
+    <div th:text="${'Cat stomach capacity is: ' + livingBeeingDTO.getStomachMaximumVolume()}"></div>
     <div th:if="${lastContainer==null && error==null}" th:text="${'Cat will drink for the first time'}"></div>
     <div th:if="error!=null">
         <p th:if="${error?.equals('containerProblem')}" class="error alert alert-danger" th:text="${'Water container cannot be empty.'}">Error diplayer</p>
@@ -22,9 +22,9 @@
     </div>
     <div th:if="${lastContainer!=null}" th:text="${'In last container '+ lastContainer.getCurrentVolume() +' water left.'}"></div>
     <br>
-    <form method="post" th:action="@{/drinkCat}" th:object="${container}">
+    <form method="post" th:action="@{/drink}" th:object="${container}">
         <div class="col-2">
-            <select class="form-select" th:field="*{type}">
+            <select class="form-select" th:field="*{containerType}">
                 <option value="bowl">Bowl</option>
                 <option value="bottle">Bottle</option>
             </select>
@@ -35,9 +35,10 @@
                 <input type="text" required="required" class="form-control" th:field="*{capacity}" pattern="^\d+\.\d+$|^\d+$" placeholder="exp: 2.5">
             </div>
         </div>
-        <div th:object="${livingBeeing}">
+        <div th:object="${livingBeeingDTO}">
             <input type="hidden" th:value="*{stomachCurrentVolume}" name="stomachCurrentVolume"/>
             <input type="hidden" th:value="*{stomachMaximumVolume}" name="stomachMaximumVolume"/>
+            <input type="hidden" th:value="*{livingBeeingType}" name="livingBeeingType"/>
         </div>
         <button type="submit" class="btn btn-primary">Drink!</button>
     </form>

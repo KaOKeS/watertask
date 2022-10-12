@@ -2,9 +2,11 @@ package com.akvelon.watertask.controller;
 
 import com.akvelon.watertask.dto.CreateContainerFormDTO;
 import com.akvelon.watertask.dto.CreateLivingBeeingFormDTO;
+import com.akvelon.watertask.dto.LivingBeeingDTO;
 import com.akvelon.watertask.entity.*;
-import com.akvelon.watertask.entity.contracts.ContainerFactory;
-import com.akvelon.watertask.entity.contracts.LivingBeeingFactory;
+import com.akvelon.watertask.entity.Converter.LivingBeeingConverter;
+import com.akvelon.watertask.entity.contract.ContainerFactory;
+import com.akvelon.watertask.entity.contract.LivingBeeingFactory;
 import com.akvelon.watertask.service.DrinkService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,30 +16,34 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Locale;
+
 @Controller
 public class MainController {
     private final DrinkService drinkService;
     private final LivingBeeingFactory livingBeeingFactory;
     private final ContainerFactory containerFactory;
+    private final LivingBeeingConverter livingBeeingConverter;
 
-    public MainController(DrinkService drinkService, LivingBeeingFactory livingBeeingFactory, ContainerFactory containerFactory) {
+    public MainController(DrinkService drinkService, LivingBeeingFactory livingBeeingFactory, ContainerFactory containerFactory, LivingBeeingConverter livingBeeingConverter) {
         this.drinkService = drinkService;
         this.livingBeeingFactory = livingBeeingFactory;
         this.containerFactory = containerFactory;
+        this.livingBeeingConverter = livingBeeingConverter;
     }
 
     @GetMapping("")
     public String displayMainPage(Model model){
         model.addAttribute("createLivingBeeingFormDTO",new CreateLivingBeeingFormDTO());
+        LivingBeeing human = livingBeeingFactory.createLivingBeeing("human", 2.0);
         return "index";
     }
 
     @PostMapping("/create")
     public String submitForm(@ModelAttribute("createLivingBeeingFormDTO") CreateLivingBeeingFormDTO createLivingBeeingFormDTO,
                              RedirectAttributes redirectAttributes) {
-        String livingBeeing = createLivingBeeingFormDTO.getLivingBeeing();
-        double stomachCapacity = createLivingBeeingFormDTO.getStomachCapacity();
-        redirectAttributes.addFlashAttribute("livingBeeing",livingBeeingFactory.createLivingBeeing(livingBeeing,stomachCapacity));
+        redirectAttributes.addFlashAttribute("livingBeeingDTO",
+                new LivingBeeingDTO(createLivingBeeingFormDTO.getStomachCapacity(),createLivingBeeingFormDTO.getLivingBeeing()));
         return "redirect:/" + createLivingBeeingFormDTO.getLivingBeeing();
     }
 
@@ -53,48 +59,28 @@ public class MainController {
         return "cat";
     }
 
-    @PostMapping("/drink/{}")
+    @PostMapping("/drink")
     public String drinkProcess(@ModelAttribute("container") CreateContainerFormDTO createContainerFormDTO,
-                               @ModelAttribute("livingBeeing") Human livingBeeing,
+                               @ModelAttribute("livingBeeingDTO") LivingBeeingDTO livingBeeingDTO,
                                RedirectAttributes redirectAttributes){
-        redirectAttributes.addFlashAttribute("livingBeeing",livingBeeing);
+        LivingBeeing livingBeeing = livingBeeingFactory.createLivingBeeing(livingBeeingDTO.getLivingBeeingType(),livingBeeingDTO.getStomachMaximumVolume(),livingBeeingDTO.getStomachCurrentVolume());
         try{
-            Container container = containerFactory.createContainer(createContainerFormDTO.getType(),createContainerFormDTO.getCapacity());
+            Container container = containerFactory.createContainer(createContainerFormDTO.getContainerType(),createContainerFormDTO.getCapacity());
             try{
                 drinkService.drink(livingBeeing,container);
+                redirectAttributes.addFlashAttribute("livingBeeingDTO",livingBeeingConverter.entityToDto(livingBeeing));
             }
             catch (IllegalArgumentException e){
+                redirectAttributes.addFlashAttribute("livingBeeing",livingBeeing);
                 return "redirect:/error/full";
             }
             redirectAttributes.addFlashAttribute("lastContainer",container);
         }
         catch (IllegalArgumentException e){
+            redirectAttributes.addFlashAttribute("livingBeeing",livingBeeing);
             return "redirect:/error/containerProblem";
         }
-        return "redirect:/human";
-    }
-
-    @PostMapping("/drinkCat")
-    public String drinkProcess(@ModelAttribute("container") CreateContainerFormDTO createContainerFormDTO,
-                               @ModelAttribute("livingBeeing") Cat livingBeeing,
-                               RedirectAttributes redirectAttributes){
-        redirectAttributes.addFlashAttribute("livingBeeing",livingBeeing);
-        try{
-            Container container = containerFactory.createContainer(createContainerFormDTO.getType(),createContainerFormDTO.getCapacity());
-            if(container instanceof Bottle)
-                return "redirect:/error/wrongContainer";
-            try{
-                drinkService.drink(livingBeeing,container);
-            }
-            catch (IllegalArgumentException e){
-                return "redirect:/error/full";
-            }
-            redirectAttributes.addFlashAttribute("lastContainer",container);
-        }
-        catch (IllegalArgumentException e){
-            return "redirect:/error/containerProblem";
-        }
-        return "redirect:/cat";
+        return "redirect:/"+livingBeeingDTO.getLivingBeeingType().toLowerCase();
     }
 
     @GetMapping(value = "/error/{error}")
@@ -107,7 +93,7 @@ public class MainController {
             return "redirect:/";
         }
         redirectAttributes.addFlashAttribute("error",error);
-        redirectAttributes.addFlashAttribute("livingBeeing",livingBeeing);
+        redirectAttributes.addFlashAttribute("livingBeeingDTO",livingBeeingConverter.entityToDto(livingBeeing));
         return (livingBeeing instanceof Human) ? "redirect:/human" : "redirect:/cat";
     }
 }

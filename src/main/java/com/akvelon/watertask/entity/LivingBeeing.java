@@ -10,6 +10,11 @@ public abstract class LivingBeeing {
         this.STOMACH_MAX_VOLUME = stomachMaximumVolume;
     }
 
+    public LivingBeeing(double STOMACH_MAX_VOLUME, double stomachCurrentVolume) {
+        this.STOMACH_MAX_VOLUME = STOMACH_MAX_VOLUME;
+        this.stomachCurrentVolume = stomachCurrentVolume;
+    }
+
     public double getStomachCurrentVolume() {
         return stomachCurrentVolume;
     }

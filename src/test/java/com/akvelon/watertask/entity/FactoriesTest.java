@@ -1,7 +1,7 @@
 package com.akvelon.watertask.entity;
 
-import com.akvelon.watertask.entity.contracts.ContainerFactory;
-import com.akvelon.watertask.entity.contracts.LivingBeeingFactory;
+import com.akvelon.watertask.entity.contract.ContainerFactory;
+import com.akvelon.watertask.entity.contract.LivingBeeingFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

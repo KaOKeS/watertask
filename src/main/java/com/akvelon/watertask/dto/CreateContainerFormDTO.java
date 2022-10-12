@@ -2,7 +2,7 @@ package com.akvelon.watertask.dto;
 
 public class CreateContainerFormDTO {
     private double capacity;
-    private String type;
+    private String containerType;
 
     public double getCapacity() {
         return capacity;
@@ -12,11 +12,11 @@ public class CreateContainerFormDTO {
         this.capacity = capacity;
     }
 
-    public String getType() {
-        return type;
+    public String getContainerType() {
+        return containerType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setContainerType(String containerType) {
+        this.containerType = containerType;
     }
 }

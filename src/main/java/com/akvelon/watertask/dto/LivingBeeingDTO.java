@@ -1,13 +1,30 @@
 package com.akvelon.watertask.dto;
 
 public class LivingBeeingDTO {
-    private final double STOMACH_MAX_VOLUME;
+    private double STOMACH_MAX_VOLUME;
     private double stomachCurrentVolume;
+    private String livingBeeingType;
 
-    public LivingBeeingDTO(double stomachMaximumVolume) {
-        if(stomachMaximumVolume<=0)
-            throw new IllegalArgumentException("Stomach maximum volume should be bigger than 0");
-        this.STOMACH_MAX_VOLUME = stomachMaximumVolume;
+    public LivingBeeingDTO() {
+    }
+
+    public LivingBeeingDTO(double STOMACH_MAX_VOLUME, String livingBeeingType) {
+        this.STOMACH_MAX_VOLUME = STOMACH_MAX_VOLUME;
+        this.livingBeeingType = livingBeeingType;
+    }
+
+    public LivingBeeingDTO(double STOMACH_MAX_VOLUME, double stomachCurrentVolume, String livingBeeingType) {
+        this.STOMACH_MAX_VOLUME = STOMACH_MAX_VOLUME;
+        this.stomachCurrentVolume = stomachCurrentVolume;
+        this.livingBeeingType = livingBeeingType;
+    }
+
+    public double getStomachMaximumVolume() {
+        return STOMACH_MAX_VOLUME;
+    }
+
+    public void setStomachMaximumVolume(double STOMACH_MAX_VOLUME) {
+        this.STOMACH_MAX_VOLUME = STOMACH_MAX_VOLUME;
     }
 
     public double getStomachCurrentVolume() {
@@ -15,18 +32,15 @@ public class LivingBeeingDTO {
     }
 
     public void setStomachCurrentVolume(double stomachCurrentVolume) {
-        if(stomachCurrentVolume<0)
-            throw new IllegalArgumentException("Stomach current volume can not be less than 0");
-        else if(stomachCurrentVolume>STOMACH_MAX_VOLUME)
-            throw new IllegalArgumentException("Stomach current capacity can not exeed its maximum capacity");
         this.stomachCurrentVolume = stomachCurrentVolume;
     }
 
-    public double getStomachMaximumVolume() {
-        return STOMACH_MAX_VOLUME;
+
+    public String getLivingBeeingType() {
+        return livingBeeingType;
     }
 
-    public boolean isStomachFull(){
-        return (Math.abs(stomachCurrentVolume-STOMACH_MAX_VOLUME)<0.0001);
+    public void setLivingBeeingType(String livingBeeingType) {
+        this.livingBeeingType = livingBeeingType;
     }
 }
